@@ -1,0 +1,19 @@
+#!/bin/sh
+
+filename="$HOME/.cache/plants/data"
+
+while read line; do
+name=$(echo $line | cut -d' ' -f1 -)
+seeddate=$(echo $line | cut -d' ' -f2 -)
+growthwindow=$(echo $line | cut -d' ' -f3 -)
+
+seeded="$(date -d $seeddate +"%d-%m-%Y")"
+harvest="$(date -d "$seeddate +$growthwindow days" +"%d-%m-%Y")"
+color="\033[0;31m"
+
+if [ $(date +"%s") -ge $(date -d "$seeddate +$growthwindow days" +"%s") ]; then
+  color="\033[0;32m"
+fi
+
+echo -e "$name seeded $seeded harvest ${color}$harvest\033[0m"
+done < $filename
